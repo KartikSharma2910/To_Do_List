@@ -1,16 +1,19 @@
 import { useEffect, useState } from "react";
 import "./styles.css";
 
+type TaskProps = {
+  id: string | undefined;
+  name: string | undefined;
+};
+
 const getLocalData = () => {
   const task = localStorage.getItem("tasks");
-  return task && JSON.parse(localStorage.getItem("tasks"));
+  return task && JSON.parse(localStorage.getItem("tasks") || "{}");
 };
 
 const List = () => {
   const [value, setValue] = useState("");
-  const [task, setTask] = useState<{ id: string; name: string }[]>(
-    getLocalData()
-  );
+  const [task, setTask] = useState<TaskProps[]>(getLocalData());
   const [edit, setEdit] = useState(false);
   const [isEditItem, setIsEditItem] = useState(0);
 
@@ -58,9 +61,10 @@ const List = () => {
   // edit list items
 
   const editItem = (id: number) => {
-    let newEditItems = task.find((_, idx) => {
+    const newEditItems: any = task.find((_, idx) => {
       return idx === id;
     });
+    console.log(newEditItems);
     setEdit(true);
     setValue(newEditItems?.name);
     setIsEditItem(id);
